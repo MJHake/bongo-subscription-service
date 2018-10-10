@@ -1,13 +1,49 @@
 [{
   "id": "c796d733-9779-45c5-a130-20fd1fd0b652",
   "dataType": "Seller",
-  "name": "YouSeeU"
+  "name": "YouSeeU",
+  "email": "sales@youseeu.com"
 }, {
   "id": "43fca9c6-91f4-4593-9e5c-fac85beab5a7",
   "dataType": "Seller",
-  "name": "Moodle Var 1"
+  "name": "TopHat",
+  "email": "sales@tophat.com"
 }, {
   "id": "42828c93-afb5-4761-ba55-becfda40b11b",
   "dataType": "Seller",
-  "name": "Moodle Var 2"
+  "name": "D2L",
+  "email": "sales@d2l.com"
+}, {
+  "id": "65t28c93-afb5-4761-ba55-becfda40b55f",
+  "dataType": "Seller",
+  "name": "Moodle Var",
+  "email": "sales@moodle.com"
+}, {
+  "id": "532ewfer-afb5-4761-ba55-werewfdsf455",
+  "dataType": "AccessCode",
+  "sellerId": "c796d733-9779-45c5-a130-20fd1fd0b652",
+  "code": "YSU-123-ABC",
+  "createDate": "2018-08-01",
+  "expireDate": "2020-01-01"
+}, {
+  "id": "45234tew-afb5-4761-ba55-werewfdsdqferer",
+  "dataType": "AccessCode",
+  "sellerId": "43fca9c6-91f4-4593-9e5c-fac85beab5a7",
+  "code": "TH-007-999",
+  "createDate": "2018-08-01",
+  "expireDate": "2020-01-01"
+}, {
+  "id": "65rtwfer-afb5-4761-ba55-werewfdstrew454",
+  "dataType": "AccessCode",
+  "sellerId": "42828c93-afb5-4761-ba55-becfda40b11b",
+  "code": "D2L-055-444",
+  "createDate": "2018-08-01",
+  "expireDate": "2020-01-01"
+}, {
+  "id": "6577ewfer-afb5-4761-ba55-werewfd54rg6",
+  "dataType": "AccessCode",
+  "sellerId": "65t28c93-afb5-4761-ba55-becfda40b55f",
+  "code": "M-999-123",
+  "createDate": "2018-08-01",
+  "expireDate": "2020-01-01"
 }]

@@ -42,6 +42,7 @@
     "jest-junit": "^5.2.0",
     "serverless": "^1.32.0",
     "serverless-dynamodb-local": "^0.2.35",
-    "serverless-offline": "^3.27.0"
+    "serverless-offline": "^3.27.0",
+    "supertest": "^3.3.0"
   }
 }
