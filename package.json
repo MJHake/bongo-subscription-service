@@ -1,0 +1,47 @@
+{
+  "name": "bongo-subscription-service",
+  "version": "1.0.0",
+  "description": "Vongo Subscription Service",
+  "author": "YouSeeU",
+  "scripts": {
+    "lint": "eslint --fix src",
+    "predeploy": "yarn test",
+    "deploy": "serverless deploy",
+    "undeploy": "serverless remove",
+    "s3Config": "serverless s3deploy",
+    "prestart": "yarn test",
+    "start": "serverless offline start",
+    "pretest": "yarn lint",
+    "test": "jest unit",
+    "integration-test": "jest integration",
+    "watch": "jest unit --watch",
+    "ci": "jest unit --ci",
+    "coverage": "jest unit --coverage --collectCoverageFrom=src/**/*.js"
+  },
+  "jest": {
+    "verbose": true,
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
+  },
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "output": "./test-results/jest/results.xml",
+    "classNameTemplate": "{classname}-{title}",
+    "titleTemplate": "{classname}-{title}",
+    "ancestorSeparator": " â€º ",
+    "usePathForSuiteName": "true"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.6.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "jest": "^23.6.0",
+    "jest-junit": "^5.2.0",
+    "serverless": "^1.32.0",
+    "serverless-dynamodb-local": "^0.2.35",
+    "serverless-offline": "^3.27.0"
+  }
+}

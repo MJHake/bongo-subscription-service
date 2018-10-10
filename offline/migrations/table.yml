@@ -1,0 +1,18 @@
+table:
+  Type: 'AWS::DynamoDB::Table'
+  DeletionPolicy: Retain
+  Properties:
+    TableName: ${self:provider.environment.DYNAMODB_TABLE}
+    AttributeDefinitions:
+      - AttributeName: dataType
+        AttributeType: S
+      - AttributeName: id
+        AttributeType: S
+    KeySchema:
+      - AttributeName: dataType
+        KeyType: HASH
+      - AttributeName: id
+        KeyType: RANGE
+    ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1

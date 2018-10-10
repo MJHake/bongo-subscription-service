@@ -1,0 +1,12 @@
+{
+  "extends": "airbnb-base",
+  "env": {
+    "jest": true
+  },
+  "rules": {
+    "max-len": [1, 140, 2, {"ignoreComments": true}]
+  },
+  "settings": {
+    "import/core-modules": ["aws-sdk"]
+  }
+}
