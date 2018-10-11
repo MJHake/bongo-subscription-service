@@ -44,6 +44,17 @@ functions:
           path: all
           method: get
           cors: true
+  graphql:
+    handler: src/graphql/handler.graphqlHandler
+    events:
+      - http:
+          path: graphql
+          method: get
+          cors: true
+      - http:
+          path: graphql
+          method: post
+          cors: true
 
 resources:
   Resources: ${file(offline/migrations/table.yml)}

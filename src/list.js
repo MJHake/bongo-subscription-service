@@ -1,30 +1,23 @@
 
 
-const dynamodb = require('./dynamodb');
+const { getAll } = require('./common/dynamoClient');
 
-module.exports.list = (event, context, callback) => {
-  const params = {
-    TableName: process.env.DYNAMODB_TABLE,
-  };
+module.exports.list = async () => {
+  const { DYNAMODB_TABLE } = process.env;
 
-  // fetch all todos from the database
-  dynamodb.scan(params, (error, result) => {
-    // handle potential errors
-    if (error) {
-      console.error(error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch the todo item.',
-      });
-      return;
-    }
-
-    // create a response
-    const response = {
+  try {
+    const data = await getAll(DYNAMODB_TABLE);
+    return {
       statusCode: 200,
-      body: JSON.stringify(result.Items),
+      body: JSON.stringify(data),
     };
-    callback(null, response);
-  });
+  } catch (error) {
+    console.error(error);
+    return {
+      statusCode: error.statusCode || 501,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Couldn\'t fetch the todo item.',
+    };
+  }
+
 };

@@ -8,6 +8,12 @@ serverless dynamodb install  // first time only
 yarn start
 ```
 
+Then, in a separate terminal launch the integration tests:
+
+```bash
+yarn integration-test
+```
+
 ## View seed data in local DynamoDB instance
 When the app is started in offline mode, an offline DynamoDB is started and pre populated
 with the seed data at offline/migrations/table-seed.json. You can run queries directly against
