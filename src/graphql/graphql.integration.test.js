@@ -1,16 +1,16 @@
 const request = require('supertest');
 const fs = require('fs');
-const { dynamoClear, dynamoBatchWrite } = require('../common/integrationTestUtils');
+const { clearDynamoData, putDynamoData } = require('../common/integrationTestUtils');
 
 beforeEach(async (done) => {
   process.env.IS_OFFLINE = true;
   process.env.DYNAMODB_TABLE = 'bongo-subscription-service-dev';
-  await dynamoClear();
+  await clearDynamoData();
 
   // read test data to load
   const fileContents = fs.readFileSync('test-data/sampleData1.json');
   const itemsArray = JSON.parse(fileContents);
-  await dynamoBatchWrite(itemsArray);
+  await putDynamoData(itemsArray);
   done();
 });
 
