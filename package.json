@@ -4,7 +4,7 @@
   "description": "Vongo Subscription Service",
   "author": "YouSeeU",
   "scripts": {
-    "lint": "eslint --fix src",
+    "lint": "eslint --fix src test",
     "predeploy": "yarn test",
     "deploy": "serverless deploy",
     "undeploy": "serverless remove",

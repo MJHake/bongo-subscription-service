@@ -1,4 +1,4 @@
-const { getClient, getAll } = require('./dynamoClient');
+const { getClient, getAll } = require('../src/common/dynamoClient');
 
 
 const dynamoBatchWrite = params => new Promise((resolve, reject) => {
@@ -41,7 +41,7 @@ const deleteItemsFromDynamo = (tableName, items) => {
  * @param {*} items
  */
 const putDynamoData = (items) => {
-  console.log('PutDynamoData invoked to write '+ items.length + ' items.');
+  console.log(`PutDynamoData invoked to write ${items.length} items.`);
   const { DYNAMODB_TABLE } = process.env;
   if (!items || items.length === 0) {
     // no action necessary

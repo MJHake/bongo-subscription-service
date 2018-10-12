@@ -1,6 +1,6 @@
 const request = require('supertest');
 const fs = require('fs');
-const { clearDynamoData, putDynamoData } = require('../common/integrationTestUtils');
+const { clearDynamoData, putDynamoData } = require('./integrationTestUtils');
 
 beforeEach(async (done) => {
   process.env.IS_OFFLINE = true;
@@ -8,7 +8,7 @@ beforeEach(async (done) => {
   await clearDynamoData();
 
   // read test data to load
-  const fileContents = fs.readFileSync('test-data/sampleData1.json');
+  const fileContents = fs.readFileSync('test/test-data/sampleData1.json');
   const itemsArray = JSON.parse(fileContents);
   await putDynamoData(itemsArray);
   done();
