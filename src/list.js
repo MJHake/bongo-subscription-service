@@ -19,5 +19,4 @@ module.exports.list = async () => {
       body: 'Couldn\'t fetch the todo item.',
     };
   }
-
 };

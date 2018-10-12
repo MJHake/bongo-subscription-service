@@ -29,12 +29,12 @@ custom:
       port: 8000
       inMemory: true
       migrate: true
-      seed: true
+      seed: false
     seed:
       domain:
         sources:
           - table: ${self:provider.environment.DYNAMODB_TABLE}
-            sources: [./offline/migrations/table-seed.json]
+
 functions:
 
   list:

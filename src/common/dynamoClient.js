@@ -29,4 +29,4 @@ const getAll = (tableName) => {
   });
 };
 
-module.exports = { getAll };
+module.exports = { getClient, getAll };
