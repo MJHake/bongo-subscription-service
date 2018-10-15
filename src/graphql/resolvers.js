@@ -27,8 +27,14 @@ const getSellers = async () => {
   return sellers;
 };
 
-const getSingleSeller = async (parent) => {
+const getSellerForAccessCode = async (parent) => {
   const results = await getSeller(parent.sellerId);
+  return results[0];
+};
+
+const getSingleSeller = async (parent, args) => {
+  console.log('getSingleSeller:', args);
+  const results = await getSeller(args.id);
   return results[0];
 };
 
@@ -73,7 +79,7 @@ const resolvers = {
     accessCodes: getAccessCodes,
   },
   AccessCode: {
-    seller: getSingleSeller,
+    seller: getSellerForAccessCode,
   },
 };
 

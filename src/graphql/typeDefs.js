@@ -24,7 +24,7 @@ const typeDefs = gql`
   type Query {
     backends: [BongoBackend!]!
     sellers: [Seller!]!
-    seller(id: Int): Seller
+    seller(id: String): Seller
   }
 
   type Mutation {

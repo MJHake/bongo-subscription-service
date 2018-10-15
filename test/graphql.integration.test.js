@@ -24,14 +24,14 @@ beforeEach(async (done) => {
 const invokeQuery = query => new Promise(((resolve, reject) => {
   const myRequest = request(testURL);
   myRequest.post('/graphql')
-  .send(JSON.stringify({ query }))
-  .set('Content-Type', 'application/json')
-  .end((error, result) => {
-    if(error){
-      reject(Error(error));
-    }
-    resolve(result);
-  });
+    .send(JSON.stringify({ query }))
+    .set('Content-Type', 'application/json')
+    .end((error, result) => {
+      if (error) {
+        reject(Error(error));
+      }
+      resolve(result);
+    });
 }));
 
 describe('GraphQL Seller integration tests', () => {
@@ -81,7 +81,7 @@ describe('GraphQL Seller integration tests', () => {
   });
 
   test('Create Seller', async () => {
-    const query = `mutation {
+    const mutation = `mutation {
       createSeller(name: "Moodle Super Seller", email: "sales@mss.com"){
         id
         name
@@ -89,10 +89,22 @@ describe('GraphQL Seller integration tests', () => {
       }
     }`;
 
-    const result = await invokeQuery(query);
+    const result = await invokeQuery(mutation);
     expect(result.body.errors).toBeUndefined();
     expect(result.statusCode).toEqual(200);
-    //console.log(JSON.stringify(result.body.data));
-   
+    const createdSeller = result.body.data.createSeller;
+
+    // Query for new seller
+    const query = `{
+      seller(id: "${createdSeller.id}"){
+        id
+        name
+        email
+      }
+    }`;
+
+    const sellerQueryResult = await invokeQuery(query);
+    const fetchedSeller = sellerQueryResult.body.data.seller;
+    expect(createdSeller).toEqual(fetchedSeller);
   });
 });
