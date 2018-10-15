@@ -45,7 +45,7 @@ describe('GraphQL Seller integration tests', () => {
         expect(error).toBeNull();
         expect(result.statusCode).toEqual(200);
         const { sellers } = result.body.data;
-        //console.log(JSON.stringify(sellers));
+        // console.log(JSON.stringify(sellers));
         expect(sellers.length).toEqual(4);
 
         const d2lSeller = sellers.find(item => item.name === 'D2L');
