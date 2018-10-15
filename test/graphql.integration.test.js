@@ -18,10 +18,24 @@ beforeEach(async (done) => {
   done();
 });
 
-describe('GraphQL Seller integration tests', () => {
-  test('Get Sellers', (done) => {
-    const myRequest = request(testURL);
+/**
+ * Helper function to invoke GraphQL query or mutation
+ */
+const invokeQuery = query => new Promise(((resolve, reject) => {
+  const myRequest = request(testURL);
+  myRequest.post('/graphql')
+  .send(JSON.stringify({ query }))
+  .set('Content-Type', 'application/json')
+  .end((error, result) => {
+    if(error){
+      reject(Error(error));
+    }
+    resolve(result);
+  });
+}));
 
+describe('GraphQL Seller integration tests', () => {
+  test('Get Sellers', async () => {
     const query = `{
       sellers{
         id
@@ -38,37 +52,47 @@ describe('GraphQL Seller integration tests', () => {
       }
     }`;
 
-    myRequest.post('/graphql')
-      .send(JSON.stringify({ query }))
-      .set('Content-Type', 'application/json')
-      .end((error, result) => {
-        expect(error).toBeNull();
-        expect(result.statusCode).toEqual(200);
-        const { sellers } = result.body.data;
-        // console.log(JSON.stringify(sellers));
-        expect(sellers.length).toEqual(4);
+    const result = await invokeQuery(query);
+    expect(result.body.errors).toBeUndefined();
+    expect(result.statusCode).toEqual(200);
+    const { sellers } = result.body.data;
+    // console.log(JSON.stringify(sellers));
+    expect(sellers.length).toEqual(4);
 
-        const d2lSeller = sellers.find(item => item.name === 'D2L');
-        expect(d2lSeller.email).toBe('sales@d2l.com');
-        expect(d2lSeller.accessCodes.length).toBe(1);
-        expect(d2lSeller.accessCodes[0].code).toBe('D2L-055-444');
+    const d2lSeller = sellers.find(item => item.name === 'D2L');
+    expect(d2lSeller.email).toBe('sales@d2l.com');
+    expect(d2lSeller.accessCodes.length).toBe(1);
+    expect(d2lSeller.accessCodes[0].code).toBe('D2L-055-444');
 
-        const thSeller = sellers.find(item => item.name === 'TopHat');
-        expect(thSeller.email).toBe('sales@tophat.com');
-        expect(thSeller.accessCodes.length).toBe(1);
-        expect(thSeller.accessCodes[0].code).toBe('TH-007-999');
+    const thSeller = sellers.find(item => item.name === 'TopHat');
+    expect(thSeller.email).toBe('sales@tophat.com');
+    expect(thSeller.accessCodes.length).toBe(1);
+    expect(thSeller.accessCodes[0].code).toBe('TH-007-999');
 
-        const varSeller = sellers.find(item => item.name === 'Moodle Var');
-        expect(varSeller.email).toBe('sales@moodle.com');
-        expect(varSeller.accessCodes.length).toBe(1);
-        expect(varSeller.accessCodes[0].code).toBe('M-999-123');
+    const varSeller = sellers.find(item => item.name === 'Moodle Var');
+    expect(varSeller.email).toBe('sales@moodle.com');
+    expect(varSeller.accessCodes.length).toBe(1);
+    expect(varSeller.accessCodes[0].code).toBe('M-999-123');
 
-        const ysuSeller = sellers.find(item => item.name === 'YouSeeU');
-        expect(ysuSeller.email).toBe('sales@youseeu.com');
-        expect(ysuSeller.accessCodes.length).toBe(1);
-        expect(ysuSeller.accessCodes[0].code).toBe('YSU-123-ABC');
+    const ysuSeller = sellers.find(item => item.name === 'YouSeeU');
+    expect(ysuSeller.email).toBe('sales@youseeu.com');
+    expect(ysuSeller.accessCodes.length).toBe(1);
+    expect(ysuSeller.accessCodes[0].code).toBe('YSU-123-ABC');
+  });
 
-        done();
-      });
+  test('Create Seller', async () => {
+    const query = `mutation {
+      createSeller(name: "Moodle Super Seller", email: "sales@mss.com"){
+        id
+        name
+        email
+      }
+    }`;
+
+    const result = await invokeQuery(query);
+    expect(result.body.errors).toBeUndefined();
+    expect(result.statusCode).toEqual(200);
+    //console.log(JSON.stringify(result.body.data));
+   
   });
 });

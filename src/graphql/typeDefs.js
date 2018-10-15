@@ -26,6 +26,10 @@ const typeDefs = gql`
     sellers: [Seller!]!
     seller(id: Int): Seller
   }
+
+  type Mutation {
+    createSeller(name: String, email: String): Seller
+  }
 `;
 
 module.exports = typeDefs;

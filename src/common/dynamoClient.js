@@ -15,10 +15,13 @@ const getClient = () => {
 };
 
 /**
- * Utility finction to invoke an individual DynamoDB query
+ * Utility function to invoke an individual DynamoDB query
  * Extracted into a function to remove duplicated code.
  */
 const invokeQuery = params => new Promise(((resolve, reject) => {
+  const { DYNAMODB_TABLE } = process.env;
+  // eslint-disable-next-line no-param-reassign
+  params.TableName = DYNAMODB_TABLE;
   getClient().query(params, (error, result) => {
     if (error) {
       return reject(Error(error));
@@ -28,12 +31,29 @@ const invokeQuery = params => new Promise(((resolve, reject) => {
 }));
 
 /**
- * Invoke a DynamoDB query that is aware of potentially multiple pages 
- * or results. DynamoDB will return a max of 1M of data. If the query 
- * results in more than 1M then multiple queries must be sent, each 
- * fetching a separate page of results. This function does the work 
+ * Utility function to write item to Dynamo
+ */
+const put = item => new Promise(((resolve, reject) => {
+  const { DYNAMODB_TABLE } = process.env;
+  const params = {
+    TableName: DYNAMODB_TABLE,
+    Item: item,
+  };
+  getClient().put(params, (error) => {
+    if (error) {
+      return reject(Error(error));
+    }
+    return resolve();
+  });
+}));
+
+/**
+ * Invoke a DynamoDB query that is aware of potentially multiple pages
+ * or results. DynamoDB will return a max of 1M of data. If the query
+ * results in more than 1M then multiple queries must be sent, each
+ * fetching a separate page of results. This function does the work
  * to combine multiple pages of results.
- * @param {*} params 
+ * @param {*} params
  */
 const pageAwareQuery = async (params) => {
   let results = [];
@@ -61,9 +81,7 @@ const pageAwareQuery = async (params) => {
 };
 
 const getAllSellers = async () => {
-  const { DYNAMODB_TABLE } = process.env;
   const params = {
-    TableName: DYNAMODB_TABLE,
     KeyConditionExpression: 'dataType = :type',
     ExpressionAttributeValues: {
       ':type': 'Seller',
@@ -75,9 +93,7 @@ const getAllSellers = async () => {
 };
 
 const getSeller = async (sellerId) => {
-  const { DYNAMODB_TABLE } = process.env;
   const params = {
-    TableName: DYNAMODB_TABLE,
     KeyConditionExpression: 'dataType = :type and id = :sid',
     ExpressionAttributeValues: {
       ':type': 'Seller',
@@ -90,9 +106,7 @@ const getSeller = async (sellerId) => {
 };
 
 const getSellerAccessCodes = async (sellerId) => {
-  const { DYNAMODB_TABLE } = process.env;
   const params = {
-    TableName: DYNAMODB_TABLE,
     KeyConditionExpression: 'dataType = :type',
     FilterExpression: 'sellerId = :sid',
     ExpressionAttributeValues: {
@@ -123,6 +137,7 @@ const getAll = (tableName) => {
 };
 
 module.exports = {
+  put,
   getClient,
   getAll,
   getAllSellers,
