@@ -64,3 +64,4 @@ package:
     - node_modules/dynamodb-localhost/**
     - node_modules/serverless-dynamodb-local/**
     - node_modules/serverless-offline/**
+    - test/**

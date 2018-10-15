@@ -41,7 +41,7 @@ const deleteItemsFromDynamo = (tableName, items) => {
  * @param {*} items
  */
 const putDynamoData = (items) => {
-  console.log(`PutDynamoData invoked to write ${items.length} items.`);
+  // console.log(`PutDynamoData invoked to write ${items.length} items.`);
   const { DYNAMODB_TABLE } = process.env;
   if (!items || items.length === 0) {
     // no action necessary
@@ -71,9 +71,9 @@ const clearDynamoData = async () => {
   const { DYNAMODB_TABLE } = process.env;
   const items = await getAll(DYNAMODB_TABLE);
   if (!items || items.length === 0) {
-    console.log('DynamoDB table is already empty.');
+    // console.log('DynamoDB table is already empty.');
   } else {
-    console.log('Deleting all items in DynamoDB table.');
+    // console.log('Deleting all items in DynamoDB table.');
     await deleteItemsFromDynamo(DYNAMODB_TABLE, items);
   }
 };

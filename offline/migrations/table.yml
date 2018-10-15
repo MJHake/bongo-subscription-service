@@ -6,7 +6,11 @@ table:
     AttributeDefinitions:
       - AttributeName: dataType
         AttributeType: S
+      - AttributeName: subscriptionType
+        AttributeType: S
       - AttributeName: id
+        AttributeType: S
+      - AttributeName: institutionId
         AttributeType: S
     KeySchema:
       - AttributeName: dataType
@@ -14,5 +18,26 @@ table:
       - AttributeName: id
         KeyType: RANGE
     ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+    GlobalSecondaryIndexes:
+      - IndexName: Subscription_Type
+        KeySchema:
+        - AttributeName: subscriptionType
+          KeyType: HASH
+        - AttributeName: id
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+    LocalSecondaryIndexes:
+      - IndexName: Institution_Subscription
+        KeySchema:
+        - AttributeName: dataType
+          KeyType: HASH
+        - AttributeName: institutionId
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL

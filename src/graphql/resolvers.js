@@ -1,5 +1,10 @@
 
 const logger = require('../common/logger');
+const {
+  getAllSellers,
+  getSeller,
+  getSellerAccessCodes,
+} = require('../common/dynamoClient');
 
 const getBackends = (parent, args) => {
   logger.debug('getBackends():', parent, args);
@@ -14,40 +19,18 @@ const getBackends = (parent, args) => {
   ];
 };
 
-const sellers = [
-  {
-    name: 'mike',
-    id: 'S1',
-    email: 'mike@foo.com',
-  },
-  {
-    name: 'jim',
-    id: 'S2',
-    email: 'jim@foo.com',
-  },
-];
-
-const accessCodes = [
-  {
-    id: 'ac1',
-    code: 'ABC-123',
-    createDate: '2018-07-01',
-    expireDate: '2020-01-01',
-  },
-];
-
-const getSellers = (parent, args) => {
-  logger.debug('getSellers():', parent, args);
+const getSellers = async () => {
+  const sellers = await getAllSellers();
   return sellers;
 };
 
-const getSeller = (parent, args) => {
-  logger.debug('getSeller():', parent, args);
-  return sellers[0];
+const getSingleSeller = async (parent) => {
+  const results = await getSeller(parent.sellerId);
+  return results[0];
 };
 
-const getAccessCodes = (parent, args) => {
-  logger.debug('getAccessCodes():', parent, args);
+const getAccessCodes = async (parent) => {
+  const accessCodes = await getSellerAccessCodes(parent.id);
   return accessCodes;
 };
 
@@ -55,13 +38,13 @@ const resolvers = {
   Query: {
     backends: getBackends,
     sellers: getSellers,
-    seller: getSeller,
+    seller: getSingleSeller,
   },
   Seller: {
     accessCodes: getAccessCodes,
   },
   AccessCode: {
-    seller: getSeller,
+    seller: getSingleSeller,
   },
 };
 
