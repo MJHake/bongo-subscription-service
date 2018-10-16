@@ -29,6 +29,7 @@ const typeDefs = gql`
 
   type Mutation {
     createSeller(name: String, email: String): Seller
+    registerBackend(name: String, url: String, region: String): BongoBackend
   }
 `;
 

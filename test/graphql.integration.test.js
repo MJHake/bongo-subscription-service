@@ -1,38 +1,12 @@
-const request = require('supertest');
-const fs = require('fs');
-const { clearDynamoData, putDynamoData } = require('./integrationTestUtils');
+const TestUtils = require('./integrationTestUtils');
 
-const testURL = 'http://localhost:3000';
 /**
  * Reset local DynamnoDB data between each test
  */
 beforeEach(async (done) => {
-  process.env.IS_OFFLINE = true;
-  process.env.DYNAMODB_TABLE = 'global-subscription-service-dev';
-  await clearDynamoData();
-
-  // read test data to load
-  const fileContents = fs.readFileSync('test/test-data/sampleData1.json');
-  const itemsArray = JSON.parse(fileContents);
-  await putDynamoData(itemsArray);
+  await TestUtils.resetTestData();
   done();
 });
-
-/**
- * Helper function to invoke GraphQL query or mutation
- */
-const invokeGraphqlQuery = query => new Promise(((resolve, reject) => {
-  const myRequest = request(testURL);
-  myRequest.post('/graphql')
-    .send(JSON.stringify({ query }))
-    .set('Content-Type', 'application/json')
-    .end((error, result) => {
-      if (error) {
-        reject(Error(error));
-      }
-      resolve(result);
-    });
-}));
 
 describe('GraphQL Seller integration tests', () => {
   test('Get Sellers', async () => {
@@ -52,7 +26,7 @@ describe('GraphQL Seller integration tests', () => {
       }
     }`;
 
-    const result = await invokeGraphqlQuery(query);
+    const result = await TestUtils.invokeGraphqlQuery(query);
     expect(result.body.errors).toBeUndefined();
     expect(result.statusCode).toEqual(200);
     const { sellers } = result.body.data;
@@ -89,7 +63,7 @@ describe('GraphQL Seller integration tests', () => {
       }
     }`;
 
-    const result = await invokeGraphqlQuery(mutation);
+    const result = await TestUtils.invokeGraphqlQuery(mutation);
     expect(result.body.errors).toBeUndefined();
     expect(result.statusCode).toEqual(200);
     const createdSeller = result.body.data.createSeller;
@@ -103,8 +77,41 @@ describe('GraphQL Seller integration tests', () => {
       }
     }`;
 
-    const sellerQueryResult = await invokeGraphqlQuery(query);
+    const sellerQueryResult = await TestUtils.invokeGraphqlQuery(query);
     const fetchedSeller = sellerQueryResult.body.data.seller;
     expect(createdSeller).toEqual(fetchedSeller);
+  });
+});
+
+describe('GraphQL Backend integration tests', () => {
+  test('Register Backend', async () => {
+    const mutation = `mutation {
+      registerBackend(name: "Bongo Prod", url: "https://bongo.youseeu.com", region: "us-east-1"){
+        id
+        name
+        region
+        url
+      }
+    }`;
+
+    const result = await TestUtils.invokeGraphqlQuery(mutation);
+    expect(result.body.errors).toBeUndefined();
+    expect(result.statusCode).toEqual(200);
+    const registeredBackend = result.body.data.registerBackend;
+
+    // get all backends and verfy the new one is the only one
+    const query = `{
+      backends{
+        id
+        name
+        url
+        region
+      }
+    }`;
+
+    const allBackendsResult = await TestUtils.invokeGraphqlQuery(query);
+    expect(allBackendsResult.body.data.backends.length).toEqual(1);
+    const fetchedBackend = allBackendsResult.body.data.backends[0];
+    expect(fetchedBackend).toEqual(registeredBackend);
   });
 });

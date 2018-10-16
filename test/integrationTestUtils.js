@@ -1,5 +1,8 @@
+const fs = require('fs');
+const request = require('supertest');
 const { getClient } = require('../src/common/dynamoClient');
 
+const testURL = 'http://localhost:3000';
 
 const dynamoBatchWrite = params => new Promise((resolve, reject) => {
   getClient().batchWrite(params, (error) => {
@@ -97,4 +100,34 @@ const clearDynamoData = async () => {
   }
 };
 
-module.exports = { clearDynamoData, putDynamoData };
+/**
+ * Helper function to invoke GraphQL query or mutation
+ */
+const invokeGraphqlQuery = query => new Promise(((resolve, reject) => {
+  const myRequest = request(testURL);
+  myRequest.post('/graphql')
+    .send(JSON.stringify({ query }))
+    .set('Content-Type', 'application/json')
+    .end((error, result) => {
+      if (error) {
+        reject(Error(error));
+      }
+      resolve(result);
+    });
+}));
+
+const resetTestData = async () => {
+  process.env.IS_OFFLINE = true;
+  process.env.DYNAMODB_TABLE = 'global-subscription-service-dev';
+  await clearDynamoData();
+
+  // read test data to load
+  const fileContents = fs.readFileSync('test/test-data/sampleData1.json');
+  const itemsArray = JSON.parse(fileContents);
+  await putDynamoData(itemsArray);
+};
+
+module.exports = {
+  resetTestData,
+  invokeGraphqlQuery,
+};

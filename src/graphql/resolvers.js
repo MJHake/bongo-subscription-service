@@ -1,19 +1,10 @@
 
 const { UserInputError } = require('apollo-server-lambda');
-const logger = require('../common/logger');
 const DataService = require('../common/dataService');
 
-const getBackends = (parent, args) => {
-  logger.debug('getBackends():', parent, args);
-
-  return [
-    {
-      id: '111',
-      region: 'us-east-1',
-      name: 'bongo-na',
-      url: 'bongo-na.youseeu.com/graphql',
-    },
-  ];
+const getBackends = async () => {
+  const backends = await DataService.getAllBackends();
+  return backends;
 };
 
 const getSellers = async () => {
@@ -37,17 +28,26 @@ const getAccessCodes = async (parent) => {
   return accessCodes;
 };
 
-const createSeller = async (parent, args) => {
+const createNewSeller = async (parent, args) => {
   const { name, email } = args;
-
   if (!name || !email) {
     throw new UserInputError('Form Arguments invalid', {
       invalidArgs: Object.keys(args),
     });
   }
-
   const newSeller = await DataService.createSeller(name, email);
   return newSeller;
+};
+
+const createNewBackend = async (parent, args) => {
+  const { name, url, region } = args;
+  if (!name || !url || !region) {
+    throw new UserInputError('Form Arguments invalid', {
+      invalidArgs: Object.keys(args),
+    });
+  }
+  const newBackend = await DataService.createBackend(name, url, region);
+  return newBackend;
 };
 
 const resolvers = {
@@ -57,7 +57,8 @@ const resolvers = {
     seller: getSingleSeller,
   },
   Mutation: {
-    createSeller,
+    createSeller: createNewSeller,
+    registerBackend: createNewBackend,
   },
   Seller: {
     accessCodes: getAccessCodes,
