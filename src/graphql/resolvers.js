@@ -33,8 +33,8 @@ const getSellerForAccessCode = async (parent) => {
 };
 
 const getSingleSeller = async (parent, args) => {
-  console.log('getSingleSeller:', args);
-  const results = await getSeller(args.id);
+  const { id } = args;
+  const results = await getSeller(id);
   return results[0];
 };
 

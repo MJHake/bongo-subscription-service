@@ -21,7 +21,7 @@ beforeEach(async (done) => {
 /**
  * Helper function to invoke GraphQL query or mutation
  */
-const invokeQuery = query => new Promise(((resolve, reject) => {
+const invokeGraphqlQuery = query => new Promise(((resolve, reject) => {
   const myRequest = request(testURL);
   myRequest.post('/graphql')
     .send(JSON.stringify({ query }))
@@ -52,7 +52,7 @@ describe('GraphQL Seller integration tests', () => {
       }
     }`;
 
-    const result = await invokeQuery(query);
+    const result = await invokeGraphqlQuery(query);
     expect(result.body.errors).toBeUndefined();
     expect(result.statusCode).toEqual(200);
     const { sellers } = result.body.data;
@@ -89,7 +89,7 @@ describe('GraphQL Seller integration tests', () => {
       }
     }`;
 
-    const result = await invokeQuery(mutation);
+    const result = await invokeGraphqlQuery(mutation);
     expect(result.body.errors).toBeUndefined();
     expect(result.statusCode).toEqual(200);
     const createdSeller = result.body.data.createSeller;
@@ -103,7 +103,7 @@ describe('GraphQL Seller integration tests', () => {
       }
     }`;
 
-    const sellerQueryResult = await invokeQuery(query);
+    const sellerQueryResult = await invokeGraphqlQuery(query);
     const fetchedSeller = sellerQueryResult.body.data.seller;
     expect(createdSeller).toEqual(fetchedSeller);
   });
