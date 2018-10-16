@@ -34,7 +34,7 @@ dynamodb.listTables(params, function(err, data) {
 ### Scan entire table:
 ```javascript
 var params = {
-    TableName: 'bongo-subscription-service-dev',
+    TableName: 'global-subscription-service-dev',
    
 };
 dynamodb.scan(params, function(err, data) {

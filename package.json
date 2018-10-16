@@ -1,7 +1,7 @@
 {
-  "name": "bongo-subscription-service",
+  "name": "global-subscription-service",
   "version": "1.0.0",
-  "description": "Vongo Subscription Service",
+  "description": "Global Subscription Service",
   "author": "YouSeeU",
   "scripts": {
     "lint": "eslint --fix src test",

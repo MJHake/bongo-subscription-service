@@ -8,7 +8,7 @@ const testURL = 'http://localhost:3000';
  */
 beforeEach(async (done) => {
   process.env.IS_OFFLINE = true;
-  process.env.DYNAMODB_TABLE = 'bongo-subscription-service-dev';
+  process.env.DYNAMODB_TABLE = 'global-subscription-service-dev';
   await clearDynamoData();
 
   // read test data to load
