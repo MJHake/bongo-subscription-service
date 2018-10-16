@@ -80,67 +80,9 @@ const pageAwareQuery = async (params) => {
   return results;
 };
 
-const getAllSellers = async () => {
-  const params = {
-    KeyConditionExpression: 'dataType = :type',
-    ExpressionAttributeValues: {
-      ':type': 'Seller',
-    },
-  };
-
-  const result = await pageAwareQuery(params);
-  return result;
-};
-
-const getSeller = async (sellerId) => {
-  const params = {
-    KeyConditionExpression: 'dataType = :type and id = :sid',
-    ExpressionAttributeValues: {
-      ':type': 'Seller',
-      ':sid': sellerId,
-    },
-  };
-
-  const result = await pageAwareQuery(params);
-  return result;
-};
-
-const getSellerAccessCodes = async (sellerId) => {
-  const params = {
-    KeyConditionExpression: 'dataType = :type',
-    FilterExpression: 'sellerId = :sid',
-    ExpressionAttributeValues: {
-      ':type': 'AccessCode',
-      ':sid': sellerId,
-    },
-  };
-
-  const result = await pageAwareQuery(params);
-  return result;
-};
-
-
-// TODO - remove this
-const getAll = (tableName) => {
-  const params = {
-    TableName: tableName,
-  };
-
-  return new Promise((resolve, reject) => {
-    getClient().scan(params, (error, result) => {
-      if (error) {
-        return reject(Error(error));
-      }
-      return resolve(result.Items);
-    });
-  });
-};
 
 module.exports = {
   put,
+  pageAwareQuery,
   getClient,
-  getAll,
-  getAllSellers,
-  getSellerAccessCodes,
-  getSeller,
 };

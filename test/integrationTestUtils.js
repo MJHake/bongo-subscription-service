@@ -1,4 +1,4 @@
-const { getClient, getAll } = require('../src/common/dynamoClient');
+const { getClient } = require('../src/common/dynamoClient');
 
 
 const dynamoBatchWrite = params => new Promise((resolve, reject) => {
@@ -61,6 +61,25 @@ const putDynamoData = (items) => {
 
   params.RequestItems[DYNAMODB_TABLE] = putRequests;
   return dynamoBatchWrite(params);
+};
+
+/**
+ * Helper utility to scan entire DB and return all data.
+ * To be used only to clear test data
+ */
+const getAll = (tableName) => {
+  const params = {
+    TableName: tableName,
+  };
+
+  return new Promise((resolve, reject) => {
+    getClient().scan(params, (error, result) => {
+      if (error) {
+        return reject(Error(error));
+      }
+      return resolve(result.Items);
+    });
+  });
 };
 
 /**

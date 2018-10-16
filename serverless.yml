@@ -36,14 +36,6 @@ custom:
           - table: ${self:provider.environment.DYNAMODB_TABLE}
 
 functions:
-
-  list:
-    handler: src/list.list
-    events:
-      - http:
-          path: all
-          method: get
-          cors: true
   graphql:
     handler: src/graphql/handler.graphqlHandler
     events:

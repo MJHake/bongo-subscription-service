@@ -1,13 +1,7 @@
 
 const { UserInputError } = require('apollo-server-lambda');
-const uuidv4 = require('uuid/v4');
 const logger = require('../common/logger');
-const {
-  put,
-  getAllSellers,
-  getSeller,
-  getSellerAccessCodes,
-} = require('../common/dynamoClient');
+const DataService = require('../common/dataService');
 
 const getBackends = (parent, args) => {
   logger.debug('getBackends():', parent, args);
@@ -23,29 +17,28 @@ const getBackends = (parent, args) => {
 };
 
 const getSellers = async () => {
-  const sellers = await getAllSellers();
+  const sellers = await DataService.getAllSellers();
   return sellers;
 };
 
 const getSellerForAccessCode = async (parent) => {
-  const results = await getSeller(parent.sellerId);
+  const results = await DataService.getSeller(parent.sellerId);
   return results[0];
 };
 
 const getSingleSeller = async (parent, args) => {
   const { id } = args;
-  const results = await getSeller(id);
+  const results = await DataService.getSeller(id);
   return results[0];
 };
 
 const getAccessCodes = async (parent) => {
-  const accessCodes = await getSellerAccessCodes(parent.id);
+  const accessCodes = await DataService.getSellerAccessCodes(parent.id);
   return accessCodes;
 };
 
 const createSeller = async (parent, args) => {
   const { name, email } = args;
-  console.log('create seller args:', name, email);
 
   if (!name || !email) {
     throw new UserInputError('Form Arguments invalid', {
@@ -53,17 +46,8 @@ const createSeller = async (parent, args) => {
     });
   }
 
-  const id = uuidv4();
-  const data = {
-    id,
-    dataType: 'Seller',
-    name,
-    email,
-  };
-
-  await put(data);
-
-  return data;
+  const newSeller = await DataService.createSeller(name, email);
+  return newSeller;
 };
 
 const resolvers = {
